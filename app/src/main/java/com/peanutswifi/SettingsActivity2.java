@@ -88,7 +88,7 @@ public class SettingsActivity2 extends PreferenceActivity {
      * {@inheritDoc}
      */
     @Override
-    public boolean onIsMultiPane() {
+    public boolean onIsMultiPane() {  //该方法在oncreat中调用，大屏为true
         return isXLargeTablet(this) && !isSimplePreferences(this);
     }
 
@@ -118,8 +118,8 @@ public class SettingsActivity2 extends PreferenceActivity {
      * {@inheritDoc}
      */
     @Override
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void onBuildHeaders(List<Header> target) {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)  //使高版本API的代码在低版本SDK不报错
+    public void onBuildHeaders(List<Header> target) { //该方法在oncreate中调用
         if (!isSimplePreferences(this)) {
             loadHeadersFromResource(R.xml.pref_headers, target);
         }
@@ -171,7 +171,7 @@ public class SettingsActivity2 extends PreferenceActivity {
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
-                preference.setSummary(stringValue);
+                preference.setSummary(stringValue);   //把从sharedpreference中读出来的值设置为summary
             }
             return true;
         }
@@ -195,7 +195,8 @@ public class SettingsActivity2 extends PreferenceActivity {
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+                        .getString(preference.getKey(), ""));   //把sharedpreference存储的值读出来作为参数2
+        //只要onPreferenceChange返回true，就会自动调用sharedpreference存储设置的值
     }
 
     /**
@@ -203,7 +204,7 @@ public class SettingsActivity2 extends PreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
+    public static class GeneralPreferenceFragment extends PreferenceFragment { //导入自定义header，header中调用fragment
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

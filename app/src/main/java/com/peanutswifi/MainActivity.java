@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     }
 
     private void init() {
-        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);  //得到wifiManager
         mWifiConnecter = new WifiConnecter(this);
         mDialog = new ProgressDialog(this);
 
@@ -152,7 +152,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     }
 
     public void connect(View view) {
-        final Timer timer = new Timer();
+        final Timer timer = new Timer();   //final修饰变量只能被赋值一次
         final Handler handler = new Handler() {
 
             @Override
@@ -172,7 +172,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
         passwd = et_passwd.getText().toString();
         encryp = sp_encryp.getSelectedItem().toString();
 
-        mWifiConnecter.clearConnect3(this);
+        mWifiConnecter.clearConnect3(this);//清空已存wifi配置
         setCurrentSsid();
         mWifiConnecter.connect(ssid, encryp, passwd, this);
 
@@ -224,11 +224,12 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     protected void onResume() {
         super.onResume();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        pref_checkbox = prefs.getBoolean("example_checkbox", false);
+        pref_checkbox = prefs.getBoolean("example_checkbox", false);  //取不到就返回参数2
         pref_frequency = prefs.getString("example_list", "null");
         pref_count = prefs.getString("example_list2", "null");
 
 //        share data
+        //getApplication得到本应用程序的全局唯一的对象，在任何activity中都可以得到，可以传递数据
         Data myData = (Data) getApplication();
         myData.prefCheckBox = pref_checkbox;
         myData.prefFreq = pref_frequency;
@@ -240,7 +241,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
         Log.v("jacard", "------onStarted------");
         Toast.makeText(MainActivity.this, "onStarted", Toast.LENGTH_SHORT).show();
         mDialog.setMessage("Connecting to " + ssid + " ...");
-        mDialog.show();
+        mDialog.show();  //显示对话框
     }
 
     @Override
@@ -272,7 +273,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     @Override
     public void onFinished(boolean isSuccessed) {
         Log.v("jacard", "------onFinished------");
-        mDialog.dismiss();
+        mDialog.dismiss();  //隐藏对话框
         Toast.makeText(MainActivity.this, "onFinished : " + isSuccessed, Toast.LENGTH_SHORT).show();
     }
 
@@ -294,16 +295,16 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {  //监听用户选择了哪个item,并将item作为参数，自动调用这个方法
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        //如果有多个item，使用case语句
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(MainActivity.this, SettingsActivity2.class);
-            item.setIntent(intent);
+            item.setIntent(intent);  //item与intent绑定
         }
         return super.onOptionsItemSelected(item);
     }
@@ -325,7 +326,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
         }
     }
 
-    public void initIperf() {
+    public void initIperf() {//将iperf从asset中拷贝到/data/data/com.peanutswifi/iperf
 //        final TextView tv = (TextView) findViewById(R.id.OutputText);
         InputStream in;
         try {
@@ -351,9 +352,9 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
                 in.close();
                 out.close();
                 //After the copy operation is finished, we give execute permissions to the "iperf" executable using shell commands.
-                Process processChmod = Runtime.getRuntime().exec("/system/bin/chmod 744 /data/data/com.peanutswifi/iperf");
+                Process processChmod = Runtime.getRuntime().exec("/system/bin/chmod 744 /data/data/com.peanutswifi/iperf");//Runtime是单实例类，新建进程执行命令
                 // Executes the command and waits untill it finishes.
-                processChmod.waitFor();
+                processChmod.waitFor();//主进程阻塞，直到子进程结束。
             } catch (IOException e) {
 //                tv.append("\nError occurred while accessing system resources, please reboot and try again.");
                 return;
@@ -379,18 +380,18 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
 
         //This function is used to implement the main task that runs on the background.
         @Override
-        protected String doInBackground(Void... voids) {
+        protected String doInBackground(Void... voids) {//执行/data/data/com.peanutswifi/iperf -s
             //Iperf command syntax check using a Regular expression to protect the system from user exploitation.
 //            String str = inputCommands.getText().toString();
             String str = "iperf -s"; // excute iperf command,can be changed or use EditView for user input
             if (!str.matches("(iperf )?((-[s,-server])|(-[c,-client] ([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5]))|(-[c,-client] \\w{1,63})|(-[h,-help]))(( -[f,-format] [bBkKmMgG])|(\\s)|( -[l,-len] \\d{1,5}[KM])|( -[B,-bind] \\w{1,63})|( -[r,-tradeoff])|( -[v,-version])|( -[N,-nodelay])|( -[T,-ttl] \\d{1,8})|( -[U,-single_udp])|( -[d,-dualtest])|( -[w,-window] \\d{1,5}[KM])|( -[n,-num] \\d{1,10}[KM])|( -[p,-port] \\d{1,5})|( -[L,-listenport] \\d{1,5})|( -[t,-time] \\d{1,8})|( -[i,-interval] \\d{1,4})|( -[u,-udp])|( -[b,-bandwidth] \\d{1,20}[bBkKmMgG])|( -[m,-print_mss])|( -[P,-parallel] d{1,2})|( -[M,-mss] d{1,20}))*")) {
-                publishProgress("Error: invalid syntax. Please try again.\n\n");
+                publishProgress("Error: invalid syntax. Please try again.\n\n");//主线程未重写onProgressUpdate,空函数
                 return null;
-            }
+            }//如果是用户输入，用上面的正则限制
             try {
                 //The user input for the parameters is parsed into a string list as required from the ProcessBuilder Class.
 //                String[] commands = inputCommands.getText().toString().split(" ");
-                String[] commands = str.split(" ");
+                String[] commands = str.split(" ");//字符串分割成数组
                 List<String> commandList = new ArrayList<String>(Arrays.asList(commands));
                 //If the first parameter is "iperf", it is removed
                 if (commandList.get(0).equals((String) "iperf")) {
@@ -406,14 +407,14 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
                 //The output text is accumulated into a string buffer and published to the GUI
                 char[] buffer = new char[4096];
                 StringBuffer output = new StringBuffer();
-                while ((read = reader.read(buffer)) > 0) {
+                while ((read = reader.read(buffer)) > 0) {//最关键的点：reader.read()将阻塞程序，始终处于等待接收输入的状态。子进程iperf有输出，就执行一遍循环，没有输出，就一直等待，阻塞主进程
                     output.append(buffer, 0, read);
                     //This is used to pass the output to the thread running the GUI, since this is separate thread.
-                    publishProgress(output.toString());
+                    publishProgress(output.toString());//主线程未重写onProgressUpdate,空函数
                     output.delete(0, output.length());
                 }
                 reader.close();
-                process.destroy();
+                process.destroy();//销毁子进程,iperf也会命令也会被关闭,但是主进程被无限循环在上面的while循环里,根本走不出来
             } catch (IOException e) {
                 publishProgress("\nError occurred while accessing system resources, please reboot and try again.");
                 e.printStackTrace();

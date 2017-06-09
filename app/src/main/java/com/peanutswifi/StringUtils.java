@@ -12,7 +12,7 @@ class StringUtils {
         }
 
         final int lastPos = string.length() - 1;
-        if (lastPos < 0 || (string.charAt(0) == '"' && string.charAt(lastPos) == '"')) {
+        if (lastPos < 0 || (string.charAt(0) == '"' && string.charAt(lastPos) == '"')) {//以"开始且以"结束
             return string;
         }
 

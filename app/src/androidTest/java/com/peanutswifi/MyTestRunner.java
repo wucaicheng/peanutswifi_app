@@ -47,7 +47,7 @@ public class MyTestRunner extends InstrumentationTestRunner {
     }
 
     @Override
-    public TestSuite getAllTests()
+    public TestSuite getAllTests()  //根据我们的命令，产生TestSuite
     {
         return new TestSuiteBuilder(MyTestRunner.class).includeAllPackagesUnderHere().build();
     }

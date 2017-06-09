@@ -22,7 +22,7 @@ public class Wifi {
 //        wifiMgr.saveConfiguration();
 
         WifiConfiguration config = new WifiConfiguration();
-        config.SSID = StringUtils.convertToQuotedString(ssid);
+        config.SSID = StringUtils.convertToQuotedString(ssid); //ssid被双引号包围
         // This is a network that does not broadcast its SSID, so an SSID-specific probe request must be used for scans
         config.hiddenSSID = true;
 //        config.BSSID = bssid;
@@ -36,10 +36,10 @@ public class Wifi {
 
 //        final List<WifiConfiguration> configurations2 = wifiMgr.getConfiguredNetworks();
 
-        if(!wifiMgr.enableNetwork(id, true)){
+        if(!wifiMgr.enableNetwork(id, true)){//立刻返回,wifi连接交给后台异步完成,可能触发网络状态改变的广播
             return false;
         }
-
+//reconnect只有当wifi是disconnect的时候才会生效，而reassociate无论当前是什么状态都会重连一次,都可能触发网络状态改变的广播
         final boolean connect = reassociate ? wifiMgr.reassociate() : wifiMgr.reconnect();
 
         if(!connect) {

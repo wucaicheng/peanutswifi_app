@@ -7,6 +7,7 @@ import android.app.Application;
  */
 public class Data  extends Application{
 
+    //全局变量
     public Boolean prefCheckBox;
     public String prefFreq;
     public String prefCount;
