@@ -10,6 +10,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WpsInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -41,6 +42,47 @@ public class WifiConnecter{
 
     private boolean isRegistered;
     private boolean isActiveScan;
+
+    private boolean mWpsComplete;
+
+    private final WifiManager.WpsCallback mWpsCallback = new WifiManager.WpsCallback() {
+        @Override
+        public void onStarted(String pin) {
+            Toast.makeText(getApplicationContext(), "Started wps connection.", Toast.LENGTH_SHORT).show();
+        }
+        @Override
+        public void onSucceeded() {
+            mWpsComplete = true;
+            displayFragment(createSuccessFragment(), true);
+        }
+        @Override
+        public void onFailed(int reason) {
+            mWpsComplete = true;
+            String errorMessage;
+            switch (reason) {
+                case WifiManager.WPS_OVERLAP_ERROR:
+                    errorMessage = getString(R.string.wifi_wps_failed_overlap);
+                    break;
+                case WifiManager.WPS_WEP_PROHIBITED:
+                    errorMessage = getString(R.string.wifi_wps_failed_wep);
+                    break;
+                case WifiManager.WPS_TKIP_ONLY_PROHIBITED:
+                    errorMessage = getString(R.string.wifi_wps_failed_tkip);
+                    break;
+                case WifiManager.IN_PROGRESS:
+                    mWifiManager.cancelWps(null);
+                    startWps();
+                    return;
+                case WifiManager.WPS_TIMED_OUT:
+                    startWps();
+                    return;
+                default:
+                    errorMessage = getString(R.string.wifi_wps_failed_generic);
+                    break;
+            }
+            displayFragment(createErrorFragment(errorMessage), true);
+        }
+    };
 
     public WifiConnecter(Context context){
         this.mContext = context;
@@ -341,5 +383,22 @@ public class WifiConnecter{
         public void onClearConfig();
 
         public void onShutDownWifi();
+    }
+
+    /**
+     * wps connect
+     * added by fengjiang
+     */
+    public void wpsConnect (){
+        mWpsComplete = false;
+        WpsInfo wpsConfig = new WpsInfo();
+        wpsConfig.setup = wpsConfig.PBC;
+
+
+
+        if (!mWpsComplete) {
+            mWifiManager.startWps(wpsConfig, mWpsCallback);
+        }
+
     }
 }
