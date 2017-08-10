@@ -127,7 +127,9 @@ public class WifiConnecter{
         final List<WifiConfiguration> configurations = mWifiManager.getConfiguredNetworks();
         if (configurations != null) {
             for (final WifiConfiguration configTmp : configurations) {
-                mWifiManager.removeNetwork(configTmp.networkId);
+                if (!mWifiManager.removeNetwork(configTmp.networkId)) {
+                    mWifiManager.disableNetwork(configTmp.networkId);
+                }
             }
             mWifiManager.saveConfiguration();
         }
@@ -147,7 +149,9 @@ public class WifiConnecter{
             final List<WifiConfiguration> configurations = mWifiManager.getConfiguredNetworks();
             if (configurations != null) {
                 for (final WifiConfiguration configTmp : configurations) {
-                    mWifiManager.removeNetwork(configTmp.networkId);
+                    if(!mWifiManager.removeNetwork(configTmp.networkId)) {
+                        mWifiManager.disableNetwork(configTmp.networkId);
+                    }
                 }
                 mWifiManager.saveConfiguration();
             }
