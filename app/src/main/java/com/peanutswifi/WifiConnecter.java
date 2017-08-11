@@ -50,6 +50,7 @@ public class WifiConnecter{
         @Override
         public void onStarted(String pin) {
             Log.v("fengjiang", "------WPS Started------");
+            mListener.onWpsStarted();
         }
         @Override
         public void onSucceeded() {
