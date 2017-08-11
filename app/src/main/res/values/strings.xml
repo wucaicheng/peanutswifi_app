@@ -18,6 +18,7 @@
     <string name="speedtest">speedtest</string>
     <string name="version">version</string>
     <string name="website">browser</string>
+    <string name="wps">wps</string>
 
 
     <string name="update_speed">Downlink: %s KB/s</string>

@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.net.wifi.WifiInfo;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -48,12 +49,12 @@ public class WifiConnecter{
     private final WifiManager.WpsCallback mWpsCallback = new WifiManager.WpsCallback() {
         @Override
         public void onStarted(String pin) {
-            Toast.makeText(getApplicationContext(), "Started wps connection.", Toast.LENGTH_SHORT).show();
+            Log.v("fengjiang", "------WPS Started------");
         }
         @Override
         public void onSucceeded() {
             mWpsComplete = true;
-            displayFragment(createSuccessFragment(), true);
+            Log.v("fengjiang", "------WPS Succeeded------");
         }
         @Override
         public void onFailed(int reason) {
@@ -61,26 +62,31 @@ public class WifiConnecter{
             String errorMessage;
             switch (reason) {
                 case WifiManager.WPS_OVERLAP_ERROR:
-                    errorMessage = getString(R.string.wifi_wps_failed_overlap);
+                    errorMessage = "WPS_OVERLAP_ERROR";
                     break;
                 case WifiManager.WPS_WEP_PROHIBITED:
-                    errorMessage = getString(R.string.wifi_wps_failed_wep);
+                    errorMessage = "WPS_WEP_PROHIBITED";
                     break;
                 case WifiManager.WPS_TKIP_ONLY_PROHIBITED:
-                    errorMessage = getString(R.string.wifi_wps_failed_tkip);
+                    errorMessage = "WPS_TKIP_ONLY_PROHIBITED";
                     break;
-                case WifiManager.IN_PROGRESS:
-                    mWifiManager.cancelWps(null);
-                    startWps();
-                    return;
+//                case WifiManager.IN_PROGRESS:
+//                    mWifiManager.cancelWps(null);
+//                    startWps();
+//                    return;
                 case WifiManager.WPS_TIMED_OUT:
-                    startWps();
-                    return;
+//                    startWps();
+                    errorMessage = "WPS_TIMED_OUT";
+                    break;
+                case WifiManager. WPS_AUTH_FAILURE:
+//                    startWps();
+                    errorMessage = "WPS_AUTH_FAILURE";
+                    break;
                 default:
-                    errorMessage = getString(R.string.wifi_wps_failed_generic);
+                    errorMessage ="some generic errors";
                     break;
             }
-            displayFragment(createErrorFragment(errorMessage), true);
+            Log.v("fengjiang", String.format("------WPS Failed,%s------", errorMessage));
         }
     };
 
@@ -383,19 +389,29 @@ public class WifiConnecter{
         public void onClearConfig();
 
         public void onShutDownWifi();
+
+        public void onWpsStarted();
+        public void onWpsSuccess(WifiInfo info);
+        public void onWpsFailure(String reason);
+        public void onWpsFinished(boolean isSuccessed);
     }
 
     /**
      * wps connect
      * added by fengjiang
      */
-    public void wpsConnect (){
+    public void wpsConnect (ActionListener listener){
         mWpsComplete = false;
         WpsInfo wpsConfig = new WpsInfo();
         wpsConfig.setup = wpsConfig.PBC;
 
+        if(listener != null){
+            listener.onStarted("wps");
+        }
 
-
+        if (!mWifiManager.isWifiEnabled()){
+            mWifiManager.setWifiEnabled(true);
+        }
         if (!mWpsComplete) {
             mWifiManager.startWps(wpsConfig, mWpsCallback);
         }

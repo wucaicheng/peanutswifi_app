@@ -51,6 +51,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     private Button btn_conn;
     private Button speedtest;
     private Button btn_browser;
+    private Button btn_wps;
 
     private TextView tv_cur_ssid;
     private TextView tv_cur_bssid;
@@ -131,6 +132,9 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
                 MainActivity.this.startActivity(intentBrowser);
             }
         });
+
+        btn_wps = (Button) findViewById(R.id.wps);
+
         setCurrentSsid();
     }
 
@@ -198,6 +202,17 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
         }
     }
 
+    public void wps_connect(View view) {
+//        final Timer timer = new Timer();
+
+
+//        mWifiConnecter.clearConnect3(this);
+//        setCurrentSsid();
+        mWifiConnecter.wpsConnect(this);
+
+
+    }
+
     public void connectPeriod() {
         mWifiConnecter.shutDownWifi();
         setCurrentSsid();
@@ -239,7 +254,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     public void onStarted(String ssid) {
         Log.v("jacard", "------onStarted------");
         Toast.makeText(MainActivity.this, "onStarted", Toast.LENGTH_SHORT).show();
-        mDialog.setMessage("Connecting to " + ssid + " ...");
+        mDialog.setMessage("Connecting " + ssid + " ...");
         mDialog.show();
     }
 
@@ -275,6 +290,39 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
         mDialog.dismiss();
         Toast.makeText(MainActivity.this, "onFinished : " + isSuccessed, Toast.LENGTH_SHORT).show();
     }
+
+
+    //----
+
+    @Override
+    public void onWpsStarted() {
+        Log.v("fengjiang", "------onWpsStarted------");
+        Toast.makeText(MainActivity.this, "onWpsStarted", Toast.LENGTH_SHORT).show();
+        mDialog.setMessage("WPS PBC"+"Connecting " + " ...");
+        mDialog.show();
+    }
+
+    @Override
+    public void onWpsSuccess(WifiInfo info) {
+        Log.v("fengjiang", "------onWpsSuccess------");
+        Toast.makeText(MainActivity.this, "onWpsSuccess : " + info.getSSID(), Toast.LENGTH_SHORT).show();
+        setCurrentSsid();
+    }
+
+    @Override
+    public void onWpsFailure(String reason) {
+        Log.v("fengjiang", "------onWpsFailure------" + reason);
+        Toast.makeText(MainActivity.this, "onFailure : " + reason, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onWpsFinished(boolean isSuccessed) {
+        Log.v("fengjiang", "------onWpsFinished------");
+        mDialog.dismiss();
+        Toast.makeText(MainActivity.this, "onWpsFinished : " + isSuccessed, Toast.LENGTH_SHORT).show();
+    }
+
+    //-----
 
     @Override
     public void onClearConfig() {
