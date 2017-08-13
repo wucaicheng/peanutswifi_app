@@ -254,7 +254,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     public void onStarted(String ssid) {
         Log.v("jacard", "------onStarted------");
         Toast.makeText(MainActivity.this, "onStarted", Toast.LENGTH_SHORT).show();
-        mDialog.setMessage("Connecting " + ssid + " ...");
+        mDialog.setMessage("Connecting to " + ssid + " ...");
         mDialog.show();
     }
 
