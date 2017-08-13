@@ -292,37 +292,37 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     }
 
 
-    //----
+    //----WPS
 
     @Override
     public void onWpsStarted() {
-        Log.v("fengjiang", "------onWpsStarted------");
-        Toast.makeText(MainActivity.this, "onWpsStarted", Toast.LENGTH_SHORT).show();
-        mDialog.setMessage("WPS PBC"+"Connecting " + " ...");
+        Log.v("fengjiang", "------WpsStarted------");
+        Toast.makeText(MainActivity.this, "WpsStarted", Toast.LENGTH_SHORT).show();
+        mDialog.setMessage("WPS PBC "+"Connecting " + " ...");
         mDialog.show();
     }
 
     @Override
     public void onWpsSuccess(WifiInfo info) {
-        Log.v("fengjiang", "------onWpsSuccess------");
-        Toast.makeText(MainActivity.this, "onWpsSuccess : " + info.getSSID(), Toast.LENGTH_SHORT).show();
+        Log.v("fengjiang", "------WpsSuccess------");
+        Toast.makeText(MainActivity.this, "WpsSuccess : " + info.getSSID(), Toast.LENGTH_SHORT).show();
         setCurrentSsid();
     }
 
     @Override
     public void onWpsFailure(String reason) {
-        Log.v("fengjiang", "------onWpsFailure------" + reason);
-        Toast.makeText(MainActivity.this, "onFailure : " + reason, Toast.LENGTH_SHORT).show();
+        Log.v("fengjiang", "------WpsFailure------" + reason);
+        Toast.makeText(MainActivity.this, "WpsFailure : " + reason, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onWpsFinished(boolean isSuccessed) {
-        Log.v("fengjiang", "------onWpsFinished------");
+        Log.v("fengjiang", "------WpsFinished------");
         mDialog.dismiss();
-        Toast.makeText(MainActivity.this, "onWpsFinished : " + isSuccessed, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "WpsFinished : " + isSuccessed, Toast.LENGTH_SHORT).show();
     }
 
-    //-----
+    //-----WPS
 
     @Override
     public void onClearConfig() {

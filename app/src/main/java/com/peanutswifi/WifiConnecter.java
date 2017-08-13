@@ -50,13 +50,33 @@ public class WifiConnecter{
         @Override
         public void onStarted(String pin) {
             Log.v("fengjiang", "------WPS Started------");
-            mListener.onWpsStarted();
+            if (mListener != null) {
+                mListener.onWpsStarted();
+            }
         }
         @Override
         public void onSucceeded() {
             mWpsComplete = true;
             Log.v("fengjiang", "------WPS Succeeded------");
-        }
+//            NetworkInfo mInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+//            if (mInfo.isConnected()){
+            WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
+            String getSSID = mWifiInfo.getSSID();
+            int getIpAddress = mWifiInfo.getIpAddress();
+
+            if (mWifiInfo != null && getSSID != null) {
+//                String quotedString = StringUtils.convertToQuotedString(mSsid);
+//                boolean ssidEquals = quotedString.equals(getSSID);
+//                if (ssidEquals) {
+                    if (mListener != null) {
+                        mListener.onWpsSuccess(mWifiInfo);
+                        mListener.onWpsFinished(true);
+                    }
+//                    onPause();
+                }
+            }
+//        }
+
         @Override
         public void onFailed(int reason) {
             mWpsComplete = true;
@@ -88,6 +108,10 @@ public class WifiConnecter{
                     break;
             }
             Log.v("fengjiang", String.format("------WPS Failed,%s------", errorMessage));
+            if (mListener != null) {
+                mListener.onWpsFailure(errorMessage);
+                mListener.onWpsFinished(false);
+            }
         }
     };
 
@@ -406,9 +430,9 @@ public class WifiConnecter{
         WpsInfo wpsConfig = new WpsInfo();
         wpsConfig.setup = wpsConfig.PBC;
 
-        if(listener != null){
-            listener.onStarted("wps");
-        }
+//        if(listener != null){
+//            listener.onStarted("wps");
+//        }
 
         if (!mWifiManager.isWifiEnabled()){
             mWifiManager.setWifiEnabled(true);
