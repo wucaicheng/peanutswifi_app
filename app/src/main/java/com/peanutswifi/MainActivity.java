@@ -298,15 +298,15 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     public void onWpsStarted() {
         Log.v("fengjiang", "------WpsStarted------");
         Toast.makeText(MainActivity.this, "WpsStarted", Toast.LENGTH_SHORT).show();
-        mDialog.setMessage("WPS PBC "+"Connecting " + " ...");
-        mDialog.show();
+//        mDialog.setMessage("WPS PBC "+"Connecting " + " ...");
+//        mDialog.show();
     }
 
     @Override
-    public void onWpsSuccess(WifiInfo info) {
+    public void onWpsSuccess() {
         Log.v("fengjiang", "------WpsSuccess------");
-        Toast.makeText(MainActivity.this, "WpsSuccess : " + info.getSSID(), Toast.LENGTH_SHORT).show();
-        setCurrentSsid();
+        Toast.makeText(MainActivity.this, "WpsSuccess", Toast.LENGTH_SHORT).show();
+//        setCurrentSsid();
     }
 
     @Override
@@ -318,7 +318,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     @Override
     public void onWpsFinished(boolean isSuccessed) {
         Log.v("fengjiang", "------WpsFinished------");
-        mDialog.dismiss();
+//        mDialog.dismiss();
         Toast.makeText(MainActivity.this, "WpsFinished : " + isSuccessed, Toast.LENGTH_SHORT).show();
     }
 
