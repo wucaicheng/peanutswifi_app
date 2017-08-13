@@ -53,6 +53,7 @@ public class WifiConnecter{
             if (mListener != null) {
                 mListener.onWpsStarted();
             }
+            Toast.makeText(MainActivity.this, "WpsFinished ", Toast.LENGTH_SHORT).show();
         }
         @Override
         public void onSucceeded() {
@@ -63,7 +64,7 @@ public class WifiConnecter{
             WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
             String getSSID = mWifiInfo.getSSID();
             int getIpAddress = mWifiInfo.getIpAddress();
-
+            Log.v("fengjiang", String.format("------WPS ip = %d------", getIpAddress));
             if (mWifiInfo != null && getSSID != null) {
 //                String quotedString = StringUtils.convertToQuotedString(mSsid);
 //                boolean ssidEquals = quotedString.equals(getSSID);
@@ -426,13 +427,12 @@ public class WifiConnecter{
      * added by fengjiang
      */
     public void wpsConnect (ActionListener listener){
+        this.mListener = listener;
         mWpsComplete = false;
         WpsInfo wpsConfig = new WpsInfo();
         wpsConfig.setup = wpsConfig.PBC;
 
-//        if(listener != null){
-//            listener.onStarted("wps");
-//        }
+
 
         if (!mWifiManager.isWifiEnabled()){
             mWifiManager.setWifiEnabled(true);
