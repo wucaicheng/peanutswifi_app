@@ -66,6 +66,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     private WifiConnecter mWifiConnecter;
 
     private ProgressDialog mDialog;
+    private ProgressDialog mDialog2;
 
     public Boolean pref_checkbox;
     public String pref_frequency;
@@ -92,6 +93,10 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
         mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         mWifiConnecter = new WifiConnecter(this);
         mDialog = new ProgressDialog(this);
+        mDialog2 = new ProgressDialog(this);
+        mDialog2.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
+        mDialog2.setCancelable(true);// 设置是否可以通过点击Back键取消
+        mDialog2.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
 
         tv_cur_ssid = (TextView) findViewById(R.id.cur_ssid);
         tv_cur_bssid = (TextView) findViewById(R.id.cur_bssid);
@@ -300,6 +305,30 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
         Toast.makeText(MainActivity.this, "WpsStarted", Toast.LENGTH_SHORT).show();
 //        mDialog.setMessage("WPS PBC "+"Connecting " + " ...");
 //        mDialog.show();
+        mDialog2.setTitle("WPS Connecting");
+        mDialog2.setMax(120);
+        mDialog2.setMessage("For 120 seconds");
+        mDialog2.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                int i = 0;
+                while (i < 120) {
+                    try {
+                        Thread.sleep(200);
+                        // 更新进度条的进度,可以在子线程中更新进度条进度
+                        mDialog2.incrementProgressBy(1);
+                        // dialog.incrementSecondaryProgressBy(10)//二级进度条更新方式
+                        i++;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 在进度条走完时删除Dialog
+                mDialog2.dismiss();
+            }
+        }).start();
     }
 
     @Override
