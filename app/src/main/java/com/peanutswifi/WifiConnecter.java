@@ -103,6 +103,7 @@ public class WifiConnecter{
 
     public void clearConnect(ActionListener listener){
         //   clear config and shutdown wifi
+//        mWifiManager.cancelWps(null);
         if (listener != null){
             this.mListener = listener;
 
@@ -126,6 +127,7 @@ public class WifiConnecter{
 
     public void clearConnect2(){
 //   clear without toast text
+//        mWifiManager.cancelWps(null);
         onResume();
 
         final List<WifiConfiguration> configurations = mWifiManager.getConfiguredNetworks();
@@ -147,6 +149,7 @@ public class WifiConnecter{
 
     public void clearConnect3(ActionListener listener) {
 //   clear config and disconnect with ap
+//        mWifiManager.cancelWps(null);
         if (listener != null) {
             this.mListener = listener;
 
@@ -359,14 +362,16 @@ public class WifiConnecter{
 
     public void wpsConnect (ActionListener listener){
 
+        if (!mWifiManager.isWifiEnabled()){
+            mWifiManager.setWifiEnabled(true);
+        }
+
+        mWifiManager.cancelWps(null);
         this.mListener = listener;
         mWpsComplete = false;
         WpsInfo wpsConfig = new WpsInfo();
         wpsConfig.setup = wpsConfig.PBC;
 
-        if (!mWifiManager.isWifiEnabled()){
-            mWifiManager.setWifiEnabled(true);
-        }
         if (!mWpsComplete) {
             mWifiManager.startWps(wpsConfig, mWpsCallback);
         }
@@ -398,7 +403,7 @@ public class WifiConnecter{
                 mListener.onWpsSuccess();
                 mListener.onWpsFinished(true);
             }
-//                    onPause();
+
         }
 //            }
 //        }
