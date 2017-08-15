@@ -132,6 +132,8 @@ public class WifiConnecter{
             mWifiManager.setWifiEnabled(true);
         }
 
+//        mWifiManager.cancelWps(null);
+
         if(!Wifi.connectToNewNetwork(mWifiManager, mSsid, mEncryp, mPasswd,true)){
             if(mListener != null){
                 mListener.onFailure("Connect to AP is failed!");
