@@ -298,7 +298,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
     @Override
     public void onWpsStarted() {
         Log.v("fengjiang", "------WpsStarted------");
-        Toast.makeText(MainActivity.this, "WpsStarted, Last for 2 minutes", Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, "WpsStarted, Last for 2 minutes", Toast.LENGTH_SHORT).show();
 //        mDialog.setMessage("WPS PBC "+"Connecting " + " ...");
 //        mDialog.show();
 //        mDialog2.setTitle("WPS Connecting");
