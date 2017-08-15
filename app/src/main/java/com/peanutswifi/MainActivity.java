@@ -209,7 +209,7 @@ public class MainActivity extends ActionBarActivity implements ActionListener {
 
     public void wps_connect(View view) {
 
-//        mWifiConnecter.clearConnect3(this);
+        mWifiConnecter.turnOnWifiForWps();
         mWifiConnecter.wpsConnect(this);
 
     }

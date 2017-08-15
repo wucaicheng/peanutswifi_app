@@ -124,6 +124,7 @@ public class WifiConnecter{
         this.mPasswd = password;
         this.mEncryp = encryption;
 
+        mWifiManager.cancelWps(null);
         if(listener != null){
             listener.onStarted(ssid);
         }
@@ -153,9 +154,9 @@ public class WifiConnecter{
 
         this.mListener = listener;
 
-        if (!mWifiManager.isWifiEnabled()){
-            mWifiManager.setWifiEnabled(true);
-        }
+//        if (!mWifiManager.isWifiEnabled()){
+//            mWifiManager.setWifiEnabled(true);
+//        }
 
         mWifiManager.cancelWps(null);
 
@@ -271,6 +272,13 @@ public class WifiConnecter{
         }
     }
 
+    public void turnOnWifiForWps(){
+//        turn on wifi
+
+        while (!mWifiManager.isWifiEnabled()){
+            mWifiManager.setWifiEnabled(true);
+        }
+    }
     private void handleEvent(Context context, Intent intent) {
         String action = intent.getAction();
         if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(action) && isActiveScan){

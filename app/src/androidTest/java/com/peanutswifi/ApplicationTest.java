@@ -12,12 +12,15 @@ public class ApplicationTest extends ActivityInstrumentationTestCase2<MainActivi
 
     private Solo solo ;
     private final int TIMEOUT = 30 * 1000;
+    private final int WPS_TIMEOUT = 120 * 1000;
     private String SSID = "peanuts";
     private String KEY = "12345678";
     private String URL = "http://miwifi.com/cgi-bin/luci/web";
 //    private String URL = "http://m.taobao.com";
     private final String SUCCESS = "onSuccess";
+    private final String WPS_SUCCESS = "WpsSuccess";
     private final String FINISH = "onFinished : true";
+    private final String WPS_FINISH = "WpsFinished : true";
     private final String NO_EXIST = "Cannot find specified SSID, scan countdown is over!";
     private final String IPERF = "iperf";
     private final String UPLINK_COMPLETE = "Uplink complete:";
@@ -299,5 +302,13 @@ public class ApplicationTest extends ActivityInstrumentationTestCase2<MainActivi
         solo.clickOnButton(2);
         boolean actual = solo.waitForText(NO_EXIST, 0, TIMEOUT);
         assertEquals("Specified SSID should be hidden .", expected, actual);
+    }
+
+    public void test_assoc_wps_sta() throws Exception {
+        boolean expected =true;
+        solo.clearEditText(0);
+        solo.clickOnButton(6);
+        boolean actual = solo.waitForText(WPS_SUCCESS, 0, WPS_TIMEOUT) && solo.waitForText(WPS_FINISH, 0, WPS_TIMEOUT);
+        assertEquals("WPS Connection is failed.", expected, actual);
     }
 }
