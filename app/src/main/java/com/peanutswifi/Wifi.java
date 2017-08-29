@@ -5,15 +5,19 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.text.TextUtils;
 
+import java.util.List;
+
 
 /**
  * Created by Jac on 2015/4/8.
+ * fix bug by fengjiang 2017/8/29
  */
 public class Wifi {
 
     private static final String TAG = Wifi.class.getSimpleName();
+    private static boolean wifiConnnecting;
 
-    public static boolean connectToNewNetwork(final WifiManager wifiMgr, final String ssid, final String encryp, final String passwd, boolean reassociate){
+    public static boolean connectToNewNetwork(final WifiManager wifiMgr, final String ssid, final String encryp, final String passwd){
 
 //        final List<WifiConfiguration> configurations = wifiMgr.getConfiguredNetworks();
 //        for(final WifiConfiguration configTmp : configurations) {
@@ -24,27 +28,45 @@ public class Wifi {
         WifiConfiguration config = new WifiConfiguration();
         config.SSID = StringUtils.convertToQuotedString(ssid);
         // This is a network that does not broadcast its SSID, so an SSID-specific probe request must be used for scans
-        config.hiddenSSID = true;
+
+
+        ///////////////////////
+        WifiConfiguration existConfig = IsExists(wifiMgr, config.SSID);
+        if (existConfig == null) {
+            //create new WifiConfiguration ,add to network
+            config.hiddenSSID = true;
 //        config.BSSID = bssid;
-        setupSecurity(config, encryp, passwd);
-
-        int id = wifiMgr.addNetwork(config);
-
-        if(!wifiMgr.saveConfiguration()){
-            return false;
+            setupSecurity(config, encryp, passwd);
+            int id = wifiMgr.addNetwork(config);
+            wifiConnnecting = wifiMgr.enableNetwork(id, true);
+            if(!wifiConnnecting){
+                return false;
+            }
+        } else {
+            //specified ssid configration exists, use it
+            config = existConfig;
+            wifiConnnecting = wifiMgr.enableNetwork(config.networkId, true);
+            if(!wifiConnnecting){
+                return false;
+            }
         }
+        ////////////////////////
+
+
+
+//        if(!wifiMgr.saveConfiguration()){
+//            return false;
+//        }
 
 //        final List<WifiConfiguration> configurations2 = wifiMgr.getConfiguredNetworks();
 
-        if(!wifiMgr.enableNetwork(id, true)){
-            return false;
-        }
 
-        final boolean connect = reassociate ? wifiMgr.reassociate() : wifiMgr.reconnect();
 
-        if(!connect) {
-            return false;
-        }
+//        final boolean connect = reassociate ? wifiMgr.reassociate() : wifiMgr.reconnect();
+
+//        if(!connect) {
+//            return false;
+//        }
 
         return true;
 
@@ -102,5 +124,16 @@ public class Wifi {
         }
     }
 
+    //Analyze whether WifiConfiguration for the specified SSID exists in WiFi
+    static private WifiConfiguration IsExists(final WifiManager wifiMgr, String SSID) {
+
+        List<WifiConfiguration> existingConfigs = wifiMgr.getConfiguredNetworks();
+        for (WifiConfiguration existingConfig : existingConfigs) {
+            if (existingConfig.SSID.equals(SSID)) {
+                return existingConfig;
+            }
+        }
+        return null;
+    }
 
 }
