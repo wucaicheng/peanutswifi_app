@@ -180,7 +180,6 @@ public class WifiConnecter{
 
     public void clearConnect(ActionListener listener){
         //   clear config and shutdown wifi
-//        mWifiManager.cancelWps(null);
         if (listener != null){
             this.mListener = listener;
 
@@ -204,15 +203,12 @@ public class WifiConnecter{
 
     public void clearConnect2(){
 //   clear without toast text
-//        mWifiManager.cancelWps(null);
         onResume();
 
         final List<WifiConfiguration> configurations = mWifiManager.getConfiguredNetworks();
         if (configurations != null) {
             for (final WifiConfiguration configTmp : configurations) {
-                if (!mWifiManager.removeNetwork(configTmp.networkId)) {
-                    mWifiManager.disableNetwork(configTmp.networkId);
-                }
+                mWifiManager.removeNetwork(configTmp.networkId);
             }
             mWifiManager.saveConfiguration();
         }
@@ -226,16 +222,13 @@ public class WifiConnecter{
 
     public void clearConnect3(ActionListener listener) {
 //   clear config and disconnect with ap
-//        mWifiManager.cancelWps(null);
         if (listener != null) {
             this.mListener = listener;
 
             final List<WifiConfiguration> configurations = mWifiManager.getConfiguredNetworks();
             if (configurations != null) {
                 for (final WifiConfiguration configTmp : configurations) {
-                    if(!mWifiManager.removeNetwork(configTmp.networkId)) {
-                        mWifiManager.disableNetwork(configTmp.networkId);
-                    }
+                    mWifiManager.removeNetwork(configTmp.networkId);
                 }
                 mWifiManager.saveConfiguration();
             }
