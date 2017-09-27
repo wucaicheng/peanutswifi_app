@@ -308,7 +308,7 @@ public class ApplicationTest extends ActivityInstrumentationTestCase2<MainActivi
         boolean expected =true;
         solo.clearEditText(0);
         solo.clickOnButton(6);
-        boolean actual = solo.waitForText(WPS_SUCCESS, 0, WPS_TIMEOUT) && solo.waitForText(WPS_FINISH, 0, WPS_TIMEOUT);
+        boolean actual = solo.waitForText(WPS_SUCCESS, 0, WPS_TIMEOUT);
         assertEquals("WPS Connection is failed.", expected, actual);
     }
 }
