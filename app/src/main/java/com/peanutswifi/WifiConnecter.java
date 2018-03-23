@@ -243,6 +243,31 @@ public class WifiConnecter{
         }
     }
 
+    public void clearConnect4(ActionListener listener) {
+//   disconnect with ap ,clear config
+        if (listener != null) {
+            this.mListener = listener;
+
+            onResume();
+            WifiInfo info = mWifiManager.getConnectionInfo();
+            String curSsid = info.getSSID();
+            if (curSsid != "0x") {
+                mWifiManager.disconnect();
+            }
+            listener.onShutDownWifi();
+
+            final List<WifiConfiguration> configurations = mWifiManager.getConfiguredNetworks();
+            if (configurations != null) {
+                for (final WifiConfiguration configTmp : configurations) {
+                    mWifiManager.removeNetwork(configTmp.networkId);
+                }
+                mWifiManager.saveConfiguration();
+            }
+            listener.onClearConfig();
+
+        }
+    }
+
     public void shutDownWifi(){
 //   shutdown wifi
         onResume();
